@@ -123,7 +123,9 @@ function updateCounter(multiplier, id, labelId, countId) {
 
 function decrementCounter(multiplier, id, labelId, countId) {
     const xpPerMission = parseInt(xpInput.value) || 0;
-    totalMissionsAccumulated--;
+    if (totalMissionsAccumulated > 0) {
+        totalMissionsAccumulated--;
+    }
     localStorage.setItem("missionsTotalAccumulated", totalMissionsAccumulated);
     if (counts[id] > 0) {
         counts[id]--;
