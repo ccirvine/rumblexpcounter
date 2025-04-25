@@ -11,7 +11,7 @@ const xpLevels = [
     860, 900
 ];
 let hasPlayedAudio = false;
-
+let lastTouch = 0;
 let xpTotal = parseInt(localStorage.getItem('ccirvine_wrxpcalc_xpTotal')) || 0;
 let counts = JSON.parse(localStorage.getItem('ccirvine_wrxpcalc_counts')) || { btn1: 0, btn3: 0, btn5: 0 };
 let savedXPPerMission = parseInt(localStorage.getItem('ccirvine_wrxpcalc_xpPerMission')) || 1080;
@@ -264,3 +264,11 @@ updateResetCountdown();
 setInterval(updateResetCountdown, 1000);
 checkOrInitializeReset();
 updateDisplay();
+
+document.addEventListener('touchend', function (e) {
+  const now = new Date().getTime();
+  if (now - lastTouch <= 300) {
+    e.preventDefault();
+  }
+  lastTouch = now;
+}, { passive: false });
