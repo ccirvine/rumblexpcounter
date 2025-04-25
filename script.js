@@ -10,11 +10,13 @@ const xpLevels = [
     480, 500, 520, 540, 560, 580, 600, 620, 650, 680, 710, 740, 770, 800, 830,
     860, 900
 ];
+const xpPerMission = parseInt(xpInput.value) || 0;
 let hasPlayedAudio = false;
 let lastTouch = 0;
 let xpTotal = parseInt(localStorage.getItem('ccirvine_wrxpcalc_xpTotal')) || 0;
 let counts = JSON.parse(localStorage.getItem('ccirvine_wrxpcalc_counts')) || { btn1: 0, btn3: 0, btn5: 0 };
 let savedXPPerMission = parseInt(localStorage.getItem('ccirvine_wrxpcalc_xpPerMission')) || 1080;
+let totalMissionsAccumulated = parseInt(localStorage.getItem('missionsTotalAccumulated')) || 0;
 xpInput.value = savedXPPerMission;
 
 function saveState() {
@@ -85,10 +87,21 @@ function updateDisplay() {
         }
     });
     const totalMissions = counts.btn1 + counts.btn3 + counts.btn5;
-    document.getElementById("totalMissions").textContent = `Total missions completed: ${totalMissions}`;
+    document.getElementById("totalMissions").textContent = `Total missions completed today: ${totalMissions}`;
     document.getElementById("btnMinus1").disabled = counts.btn1 === 0;
     document.getElementById("btnMinus3").disabled = counts.btn3 === 0;
     document.getElementById("btnMinus5").disabled = counts.btn5 === 0;
+    document.getElementById("totalAccumulatedMissions").textContent =
+  `Total accumulated missions: ${totalMissionsAccumulated}`;
+  [
+    { id: 'xpChange1', multiplier: 1 },
+    { id: 'xpChange3', multiplier: 3 },
+    { id: 'xpChange5', multiplier: 5 }
+  ].forEach(({ id, multiplier }) => {
+    const element = document.getElementById(id);
+    const xpAmount = xpPerMission * multiplier;
+    element.textContent = `${xpAmount} + 12 XP`;
+  });
     updateXPLevelInfo();
 
 }
@@ -96,10 +109,11 @@ function updateDisplay() {
 function updateCounter(multiplier, id, labelId, countId) {
     const xpPerMission = parseInt(xpInput.value) || 0;
     const addition = xpPerMission * multiplier + 12;
-
+    totalMissionsAccumulated++;
+    localStorage.setItem("missionsTotalAccumulated", totalMissionsAccumulated);
     if (xpTotal < maxXP) {
         xpTotal += addition;
-        if (xpTotal > maxXP) xpTotal = maxXP;
+        //if (xpTotal > maxXP) xpTotal = maxXP;
         document.getElementById("audioLevelUp").play();
         counts[id]++;
         saveState();
@@ -109,6 +123,8 @@ function updateCounter(multiplier, id, labelId, countId) {
 
 function decrementCounter(multiplier, id, labelId, countId) {
     const xpPerMission = parseInt(xpInput.value) || 0;
+    totalMissionsAccumulated--;
+    localStorage.setItem("missionsTotalAccumulated", totalMissionsAccumulated);
     if (counts[id] > 0) {
         counts[id]--;
         xpTotal -= xpPerMission * multiplier + 12;
@@ -244,6 +260,14 @@ function updateXPLevelInfo() {
     }
 }
 
+function resetAccumulatedMissions() {
+    if (confirm("Are you sure you want to reset the total accumulated missions?")) {
+      totalMissionsAccumulated = 0;
+      localStorage.setItem("missionsTotalAccumulated", 0);
+      updateDisplay();
+    }
+}
+  
 
 resetBtn.addEventListener("click", () => {
     xpTotal = 0;
@@ -272,3 +296,4 @@ document.addEventListener('touchend', function (e) {
   }
   lastTouch = now;
 }, { passive: false });
+

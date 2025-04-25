@@ -5,6 +5,7 @@ body {
     background: url('img/paper-fibers.png');
     background-color: #faf5e4;
     color: #333;
+    font-weight: bold;
 }
 
 .logo {
@@ -264,13 +265,11 @@ input[type="number"] {
     margin-top: 30px;
     font-size: 16px;
     color: #444;
-    font-weight: 500;
 }
 
 .mission-counter {
     margin: 10px auto 30px auto;
     font-size: 18px;
-    font-weight: 600;
     color: #333;
     text-align: center;
 }
@@ -325,5 +324,33 @@ input[type="number"] {
 .xp-level-info {
     font-size: 16px;
     color: #555;
-    font-weight: 500;
+}
+
+.mission-total-box {
+    margin: 20px auto;
+    text-align: center;
+    font-size: 16px;
+    color: #333;
+}
+ 
+.reset-inline {
+    margin-left: 12px;
+    background: none;
+    border: none;
+    color: #007bff;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: underline;
+}
+  
+.reset-inline:hover {
+    color: #0056b3;
+}
+  
+  
+.xp-change-info {
+    margin-top: 5px;
+    font-size: 14px;
+    color: #222;
 }
